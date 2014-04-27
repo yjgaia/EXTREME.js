@@ -110,6 +110,64 @@ JavaScript에서 함수를 파라미터 개수에 따라 다르게 호출할 수
         };
     </script>
 
+### ANNOTATION
+JavaScript에서 어노테이션 주석을 인식할 수 있게 하는 기능입니다.
+
+###### Usage
+    <script>
+        global = window;
+    </script>
+    <script src="UPPERCASE.JS"></script>
+    <script src="EXTREME.JS"></script>
+    <script>
+        // if not exists console.log.
+        if (global.console === undefined || console.log === undefined || console.log.apply === undefined) {
+            global.console = {
+                log : function(msg) {
+                    alert(msg);
+                }
+            };
+        }
+
+        global.onload = function() {
+
+            // init all singleton classes.
+            OBJECT.init();
+
+            var
+            // set color.
+            setColor = function(color) {
+                console.log('setColor: ' + color);
+            },
+
+            // set color. (not empty)
+            setColorNotEmpty = function(color) {
+                //@notEmpty
+
+                console.log('setColor(not empty): ' + color);
+            },
+
+            // run.
+            run = function(func, color) {
+
+                var
+                // ann
+                ann = ANNOTATION(func);
+
+                if (color === undefined && ann.check('notEmpty')) {
+                    // ignore.
+                } else {
+                    func(color);
+                }
+            };
+
+            run(setColor, 'green');
+            run(setColorNotEmpty, 'green');
+            run(setColor, undefined);
+            run(setColorNotEmpty, undefined);
+        };
+    </script>
+
 ##### License
 https://bitbucket.org/uppercaseio/uppercase.js/src/007c711583d32a9fcea26fd0ea5c3bf9b76dd2a6/LICENSE.md
 
