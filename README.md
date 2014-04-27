@@ -59,6 +59,57 @@ JavaScript에서 사용할 수 없는 멀티라인 문자열을 지원하는 기
         };
     </script>
 
+### OVERLOAD
+JavaScript에서 함수를 파라미터 개수에 따라 다르게 호출할 수 있는 기능입니다.
+
+###### Usage
+    <script>
+        global = window;
+    </script>
+    <script src="UPPERCASE.JS"></script>
+    <script src="EXTREME.JS"></script>
+    <script>
+        // if not exists console.log.
+        if (global.console === undefined || console.log === undefined || console.log.apply === undefined) {
+            global.console = {
+                log : function(msg) {
+                    alert(msg);
+                }
+            };
+        }
+
+        global.onload = function() {
+
+            // init all singleton classes.
+            OBJECT.init();
+
+            var
+            // overload function
+            overloadFunc = OVERLOAD([
+
+            function() {
+                console.log('first function.');
+            },
+
+            function(a) {
+                console.log('second function, a:' + a);
+            },
+
+            function(a, b) {
+                console.log('third function, a:' + a + ', b:' + b);
+            },
+
+            function(a, b, c) {
+                console.log('fourth function, a:' + a + ', b:' + b + ', c:' + c);
+            }]);
+
+            overloadFunc();
+            overloadFunc(1);
+            overloadFunc(2, 3);
+            overloadFunc(3, 4, 5);
+        };
+    </script>
+
 ##### License
 https://bitbucket.org/uppercaseio/uppercase.js/src/007c711583d32a9fcea26fd0ea5c3bf9b76dd2a6/LICENSE.md
 
