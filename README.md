@@ -30,7 +30,7 @@ JavaScript에서 사용할 수 없는 멀티라인 문자열을 지원하는 기
 
             var
             // multiline string
-            multilineStr = MULTILINE(function() {/*!@preserve
+            multilineStr = MULTILINE(function() {/*
 
                  동해물과 백두산이 마르고 닳도록
                  하느님이 보우하사 우리나라 만세
@@ -52,7 +52,7 @@ JavaScript에서 사용할 수 없는 멀티라인 문자열을 지원하는 기
                  무궁화 삼천리 화려강산
                  대한 사람 대한으로 길이 보전하세
 
-                 */0;
+                 */
             });
 
             console.log(multilineStr);
