@@ -172,6 +172,18 @@
 						return ret;
 					},
 
+					function(
+					//@date
+					a,
+
+					//@date
+					b) {
+
+						console.log('add dates.');
+
+						return new Date(a.getTime() + b.getTime());
+					},
+
 					function(a, b) {
 
 						console.log('add unknowns.');
@@ -181,6 +193,7 @@
 
 					console.log(add(1, 2));
 					console.log(add([1, 2], [3, 4]));
+					console.log(add(new Date(), new Date()));
 					console.log(add('A', 'B'));
 				});
 			};

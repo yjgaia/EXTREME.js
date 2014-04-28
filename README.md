@@ -170,6 +170,7 @@ JavaScript에서 어노테이션 주석을 인식할 수 있게 하는 기능입
 
 ### ADVANCED OVERLOAD
 어노테이션 주석을 이용하여 OVERLOAD 기능을 확장할 수 있습니다.
+파라미터 type 검사는 JavaScript의 기본 type들과 array, Date 형을 지원합니다.
 
 ###### Usage
     <script>
@@ -230,6 +231,18 @@ JavaScript에서 어노테이션 주석을 인식할 수 있게 하는 기능입
                 });
 
                 return ret;
+            },
+
+            function(
+            //@date
+            a,
+
+            //@date
+            b) {
+
+                console.log('add dates.');
+
+                return new Date(a.getTime() + b.getTime());
             },
 
             function(a, b) {
