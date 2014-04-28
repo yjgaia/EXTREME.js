@@ -168,6 +168,83 @@ JavaScript에서 어노테이션 주석을 인식할 수 있게 하는 기능입
         };
     </script>
 
+### ADVANCED OVERLOAD
+어노테이션 주석을 이용하여 OVERLOAD 기능을 확장할 수 있습니다.
+
+###### Usage
+    <script>
+        global = window;
+    </script>
+    <script src="UPPERCASE.JS"></script>
+    <script src="EXTREME.JS"></script>
+    <script>
+        // if not exists console.log.
+        if (global.console === undefined || console.log === undefined || console.log.apply === undefined) {
+            global.console = {
+                log : function(msg) {
+                    alert(msg);
+                }
+            };
+        }
+
+        global.onload = function() {
+
+            // init all singleton classes.
+            OBJECT.init();
+
+            var
+            // add.
+            add = OVERLOAD([
+
+            function(
+            //@number
+            a,
+
+            //@number
+            b) {
+
+                console.log('add numbers.');
+
+                return a + b;
+            },
+
+            function(
+            //@array
+            a,
+
+            //@array
+            b) {
+
+                var
+                // ret
+                ret = [];
+
+                console.log('add arrays.');
+
+                EACH(a, function(v) {
+                    ret.push(v);
+                });
+
+                EACH(b, function(v) {
+                    ret.push(v);
+                });
+
+                return ret;
+            },
+
+            function(a, b) {
+
+                console.log('add unknowns.');
+
+                return a + b;
+            }]);
+
+            console.log(add(1, 2));
+            console.log(add([1, 2], [3, 4]));
+            console.log(add('A', 'B'));
+        };
+    </script>
+
 ##### License
 https://bitbucket.org/uppercaseio/uppercase.js/src/007c711583d32a9fcea26fd0ea5c3bf9b76dd2a6/LICENSE.md
 
