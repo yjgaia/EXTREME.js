@@ -1,5 +1,5 @@
 # EXTREME.js
-EXTREME.js는 JavaScript의 한계를 뛰어넘기 위해 만들어진 [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)기반 프로젝트입니다.
+JavaScript의 한계를 뛰어넘기 위해 만들어진 [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)기반 프로젝트입니다.
 
 ## 사용방법
 1. UPPERCASE.JS-COMMON을 import 합니다.
@@ -192,6 +192,7 @@ console.log(add('A', 'B'));
 * array
 * ***Date***
 * ***function***
+* ***prototype***
 
 ```javascript
 var

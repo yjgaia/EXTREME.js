@@ -32,25 +32,34 @@ global.USON = USON = OBJECT({
 			functionAttrNames = [];
 
 			EACH(result, function(value, name) {
+				
 				if ( value instanceof Date === true) {
 					result[name] = INTEGER(value.getTime());
 					dateAttrNames.push(name);
-				} else if ( typeof value === 'function') {
+				}
+				
+				else if ( typeof value === 'function') {
 					result[name] = value.toString();
+					result[name + '__PROTOTYPE'] = packData(value.prototype);
 					functionAttrNames.push(name);
-				} else if (CHECK_IS_DATA(value) === true) {
+				}
+				
+				else if (CHECK_IS_DATA(value) === true) {
 					result[name] = packData(value);
-				} else if (CHECK_IS_ARRAY(value) === true) {
-
+					result[name + '__PROTOTYPE'] = packData(Object.getPrototypeOf(data[name]));
+				}
+				
+				else if (CHECK_IS_ARRAY(value) === true) {
 					EACH(value, function(v, i) {
-
 						if (CHECK_IS_DATA(v) === true) {
 							value[i] = packData(v);
 						} else {
 							// do nothing.
 						}
 					});
-				} else {
+				}
+				
+				else {
 					// do nothing.
 				}
 			});
@@ -77,15 +86,24 @@ global.USON = USON = OBJECT({
 			if (result.__FUNCTION_ATTR_NAMS !== undefined) {
 				EACH(result.__FUNCTION_ATTR_NAMS, function(functionAttrName, i) {
 					result[functionAttrName] = eval('false||' + result[functionAttrName]);
+					result[functionAttrName].prototype = unpackData(result[functionAttrName + '__PROTOTYPE']);
+					delete result[functionAttrName + '__PROTOTYPE'];
 				});
 				delete result.__FUNCTION_ATTR_NAMS;
 			}
 
 			EACH(result, function(value, name) {
+				
 				if (CHECK_IS_DATA(value) === true) {
 					result[name] = unpackData(value);
-				} else if (CHECK_IS_ARRAY(value) === true) {
-
+					EXTEND({
+						origin : result[name],
+						extend : unpackData(result[name + '__PROTOTYPE'])
+					});
+					delete result[name + '__PROTOTYPE'];
+				}
+				
+				else if (CHECK_IS_ARRAY(value) === true) {
 					EACH(value, function(v, i) {
 
 						if (CHECK_IS_DATA(v) === true) {
@@ -94,7 +112,9 @@ global.USON = USON = OBJECT({
 							// do nothing.
 						}
 					});
-				} else {
+				}
+				
+				else {
 					// do nothing.
 				}
 			});
