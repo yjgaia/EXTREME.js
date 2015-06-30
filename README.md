@@ -5,13 +5,24 @@ JavaScript의 한계를 뛰어넘기 위해 만들어진 [UPPERCASE.JS](https://
 1. UPPERCASE.JS-COMMON을 import 합니다.
 2. 필요한 기능이 들어있는 파일을 import 합니다.
 
+## 사용 환경
+* Node.js
+* 웹 브라우저 *Internet Explorer 9 이상부터 작동 가능합니다.*
+
+```javascript
+require('./UPPERCASE.JS-COMMON.js');
+require('./MULTILINE.js');
+```
+
 ```html
+...
 <script>
     global = window;
 </script>
 <script src="UPPERCASE.JS-COMMON.js"></script>
 <script src="MULTILINE.js"></script>
 <script>
+...
 ```
 
 ## MULTILINE
@@ -45,6 +56,34 @@ multilineStr = MULTILINE(function() {/*
 
 // \n동해물과 백두산이 마르고 닳도록\n하느님이 보우하사 우리나라 만세\n무궁화 삼천리 화려강산\n대한 사람 대한으로 길이 보전하세\n\n남산 위에 저 소나무 철갑을 두른 듯\n바람서리 불변함은 우리 기상일세\n무궁화 삼천리 화려강산\n대한 사람 대한으로 길이 보전하세\n\n가을 하늘 공활한데 높고 구름 없이\n밝은 달은 우리 가슴 일편단심일세\n무궁화 삼천리 화려강산\n대한 사람 대한으로 길이 보전하세\n\n이 기상과 이 맘으로 충성을 다하여\n괴로우나 즐거우나 나라 사랑하세\n무궁화 삼천리 화려강산\n대한 사람 대한으로 길이 보전하세
 console.log(multilineStr);
+```
+
+### UglifyJS나 Yui Compressor 대응
+아래와 같이 주석의 앞 뒤에 내용을 추가하면 JavaScript를 압축 할 때 주석을 제거하지 않습니다.
+```javascript
+MULTILINE(function() {/*!@preserve
+	
+	동해물과 백두산이 마르고 닳도록
+	하느님이 보우하사 우리나라 만세
+	무궁화 삼천리 화려강산
+	대한 사람 대한으로 길이 보전하세
+
+	남산 위에 저 소나무 철갑을 두른 듯
+	바람서리 불변함은 우리 기상일세
+	무궁화 삼천리 화려강산
+	대한 사람 대한으로 길이 보전하세
+
+	가을 하늘 공활한데 높고 구름 없이
+	밝은 달은 우리 가슴 일편단심일세
+	무궁화 삼천리 화려강산
+	대한 사람 대한으로 길이 보전하세
+
+	이 기상과 이 맘으로 충성을 다하여
+	괴로우나 즐거우나 나라 사랑하세
+	무궁화 삼천리 화려강산
+	대한 사람 대한으로 길이 보전하세
+	
+*/''});
 ```
 
 ## OVERLOAD

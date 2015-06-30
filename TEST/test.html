@@ -1,0 +1,42 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>EXTREME.JS</title>
+	</head>
+	<body>
+		<h1>EXTREME.JS</h1>
+		<p>
+			EXTREME.JS :: Over the JS.
+		</p>
+
+		<!-- JS WORLD -->
+		<script>
+			global = window;
+		</script>
+		<script src="UPPERCASE.JS-COMMON.js"></script>
+		<script src="../MULTILINE.js"></script>
+		<script src="../OVERLOAD.js"></script>
+		<script src="../ANNOTATION.js"></script>
+		<script src="../USON.js"></script>
+		<script>
+			// if not exists console.log.
+			if (global.console === undefined || console.log === undefined || console.log.apply === undefined) {
+				global.console = {
+					log : function(msg) {
+						alert(msg);
+					}
+				};
+			}
+			
+			// no require.
+			global.require = function() {
+				// ignore.
+			};
+		</script>
+		<script src="MULTILINE.js"></script>
+		<script src="OVERLOAD.js"></script>
+		<script src="ANNOTATION.js"></script>
+		<script src="USON.js"></script>
+	</body>
+</html>
