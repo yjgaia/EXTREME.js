@@ -1,60 +1,56 @@
-/**
+/*
  * USON
  */
-global.USON = USON = OBJECT({
+global.USON = OBJECT({
 
-	init : function(inner, self) {
-		'use strict';
+	init : (inner, self) => {
 
-		var
-		// pack data.
-		packData,
+		let packData = (data) => {
 
-		// unpack data.
-		unpackData,
+			let result = COPY(data);
+			
+			let dateNames = [];
+			let regexNames = [];
+			let functionNames = [];
 
-		// stringify.
-		stringify,
-
-		// parse.
-		parse;
-
-		packData = function(data) {
-
-			var
-			// result
-			result = COPY(data),
-
-			// date attribute names
-			dateAttrNames = [],
-
-			// function attribute names
-			functionAttrNames = [];
-
-			EACH(result, function(value, name) {
+			EACH(result, (value, name) => {
 				
-				if ( value instanceof Date === true) {
+				if (value instanceof Date === true) {
+	
+					// change to timestamp integer.
 					result[name] = INTEGER(value.getTime());
-					dateAttrNames.push(name);
+					dateNames.push(name);
 				}
 				
-				else if ( typeof value === 'function') {
+				else if (value instanceof RegExp === true) {
+	
+					// change to string.
 					result[name] = value.toString();
-					result[name + '__PROTOTYPE'] = packData(value.prototype);
-					functionAttrNames.push(name);
+					regexNames.push(name);
+				}
+				
+				else if (typeof value === 'function') {
+					
+					result[name] = value.toString();
+					
+					if (value.prototype !== undefined) {
+						result[name + '__P'] = packData(value.prototype);
+					}
+					
+					functionNames.push(name);
 				}
 				
 				else if (CHECK_IS_DATA(value) === true) {
 					result[name] = packData(value);
-					result[name + '__PROTOTYPE'] = packData(Object.getPrototypeOf(data[name]));
+					result[name + '__P'] = packData(Object.getPrototypeOf(data[name]));
 				}
 				
 				else if (CHECK_IS_ARRAY(value) === true) {
-					EACH(value, function(v, i) {
+					
+					EACH(value, (v, i) => {
+						
 						if (CHECK_IS_DATA(v) === true) {
 							value[i] = packData(v);
-						} else {
-							// do nothing.
 						}
 					});
 				}
@@ -64,71 +60,104 @@ global.USON = USON = OBJECT({
 				}
 			});
 
-			result.__DATE_ATTR_NAMES = dateAttrNames;
-			result.__FUNCTION_ATTR_NAMS = functionAttrNames;
+			result.__D = dateNames;
+			result.__R = regexNames;
+			result.__F = functionNames;
 
 			return result;
 		};
 
-		unpackData = function(data) {
+		let unpackData = (data) => {
 
-			var
-			// result
-			result = COPY(data);
+			let result = COPY(data);
 
-			if (result.__DATE_ATTR_NAMES !== undefined) {
-				EACH(result.__DATE_ATTR_NAMES, function(dateAttrName, i) {
-					result[dateAttrName] = new Date(result[dateAttrName]);
+			// when date property names exists
+			if (result.__D !== undefined) {
+	
+				// change timestamp integer to Date type.
+				EACH(result.__D, (dateName, i) => {
+					result[dateName] = new Date(result[dateName]);
 				});
-				delete result.__DATE_ATTR_NAMES;
+				
+				delete result.__D;
+			}
+			
+			// when regex property names exists
+			if (result.__R !== undefined) {
+	
+				// change string to RegExp type.
+				EACH(result.__R, (regexName, i) => {
+					
+					let pattern = result[regexName];
+					let flags;
+					
+					for (let j = pattern.length - 1; j >= 0; j -= 1) {
+						if (pattern[j] === '/') {
+							flags = pattern.substring(j + 1);
+							pattern = pattern.substring(1, j);
+							break;
+						}
+					}
+					
+					result[regexName] = new RegExp(pattern, flags);
+				});
+				
+				delete result.__R;
 			}
 
-			if (result.__FUNCTION_ATTR_NAMS !== undefined) {
-				EACH(result.__FUNCTION_ATTR_NAMS, function(functionAttrName, i) {
-					result[functionAttrName] = eval('false||' + result[functionAttrName]);
-					result[functionAttrName].prototype = unpackData(result[functionAttrName + '__PROTOTYPE']);
-					delete result[functionAttrName + '__PROTOTYPE'];
+			if (result.__F !== undefined) {
+				
+				EACH(result.__F, (functionName, i) => {
+					
+					if (result[functionName + '__P'] !== undefined) {
+						result[functionName] = eval('false||' + result[functionName]);
+						result[functionName].prototype = unpackData(result[functionName + '__P']);
+						delete result[functionName + '__P'];
+					}
+					
+					else {
+						result[functionName] = eval(result[functionName]);
+					}
 				});
-				delete result.__FUNCTION_ATTR_NAMS;
+				
+				delete result.__F;
 			}
 
-			EACH(result, function(value, name) {
+			EACH(result, (value, name) => {
 				
 				if (CHECK_IS_DATA(value) === true) {
+					
 					result[name] = unpackData(value);
+					
 					EXTEND({
 						origin : result[name],
-						extend : unpackData(result[name + '__PROTOTYPE'])
+						extend : unpackData(result[name + '__P'])
 					});
-					delete result[name + '__PROTOTYPE'];
+					
+					delete result[name + '__P'];
 				}
 				
 				else if (CHECK_IS_ARRAY(value) === true) {
-					EACH(value, function(v, i) {
+					
+					EACH(value, (v, i) => {
 
 						if (CHECK_IS_DATA(v) === true) {
 							value[i] = unpackData(v);
-						} else {
-							// do nothing.
 						}
 					});
-				}
-				
-				else {
-					// do nothing.
 				}
 			});
 
 			return result;
 		};
 
-		self.stringify = stringify = function(data) {
+		let stringify = self.stringify = (data) => {
 			//REQUIRED: data
 
 			return JSON.stringify(packData(data));
 		};
 
-		self.parse = parse = function(str) {
+		let parse = self.parse = (str) => {
 			//REQUIRED: str
 
 			return unpackData(JSON.parse(str));

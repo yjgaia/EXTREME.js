@@ -1,31 +1,25 @@
-global.OVERLOAD = OVERLOAD = METHOD(function() {
-	'use strict';
-
-	var
-	// get argument count.
-	getArgumentCount = function(func) {
-
-		var
-		// found
-		found = /^[\s\(]*function[^(]*\(\s*([^)]*?)\s*\)/.exec(func.toString());
-
+/*
+ * JavaScript에서 함수를 파라미터 개수에 따라 다르게 호출할 수 있는 기능
+ */
+global.OVERLOAD = METHOD(() => {
+	
+	let getArgumentCount = (func) => {
+		
+		let found = /^[^(]*\(\s*([^)]*?)\s*\)/.exec(func.toString());
+		
 		return found[1] === '' ? 0 : found[1].split(/,\s*/).length;
 	};
 	
 	return {
 
-		run : function(funcs) {
+		run : (funcs) => {
 			//REQUIRED: funcs
 	
-			var
-			// func info map
-			funcInfoMap = {};
+			let funcInfoMap = {};
 	
-			EACH(funcs, function(func) {
+			EACH(funcs, (func) => {
 	
-				var
-				// argument count
-				argumentCount = getArgumentCount(func);
+				let argumentCount = getArgumentCount(func);
 	
 				if (funcInfoMap[argumentCount] === undefined) {
 					funcInfoMap[argumentCount] = [];
@@ -39,30 +33,22 @@ global.OVERLOAD = OVERLOAD = METHOD(function() {
 	
 			return function() {
 	
-				var
-				// args
-				args = arguments,
-	
-				// func infos
-				funcInfos = funcInfoMap[arguments.length],
-	
-				// func
-				func;
+				let args = arguments;
+				let funcInfos = funcInfoMap[arguments.length];
+				let func;
 	
 				if (funcInfos !== undefined) {
 	
-					EACH(funcInfos, function(funcInfo) {
+					EACH(funcInfos, (funcInfo) => {
 	
-						var
-						// b
-						b = true;
+						let b = true;
 						
 						if (funcInfo.annotation !== undefined) {
 	
-							EACH(args, function(value, i) {
+							EACH(args, (value, i) => {
 		
-								EACH(funcInfo.annotation.getParameterAnnotations(i), function(annotation) {
-		
+								EACH(funcInfo.annotation.getParameterAnnotations(i), (annotation) => {
+									
 									if (annotation === 'array' && CHECK_IS_ARRAY(value) === true) {
 										return;
 									} else if (annotation === 'date' && VALID.date(value) === true) {

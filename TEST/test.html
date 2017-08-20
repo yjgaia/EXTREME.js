@@ -2,41 +2,28 @@
 <html>
 	<head>
 		<meta charset="UTF-8">
-		<title>EXTREME.JS</title>
+		<title>EXTREME.js</title>
 	</head>
 	<body>
-		<h1>EXTREME.JS</h1>
+		<h1>EXTREME.js</h1>
 		<p>
-			EXTREME.JS :: Over the JS.
+			EXTREME.js :: Over the JavaScript.
 		</p>
-
-		<!-- JS WORLD -->
-		<script>
-			global = window;
-		</script>
-		<script src="UPPERCASE.JS-COMMON.js"></script>
+		<script src="../UPPERCASE-CORE/BROWSER.js"></script>
 		<script src="../MULTILINE.js"></script>
 		<script src="../OVERLOAD.js"></script>
 		<script src="../ANNOTATION.js"></script>
 		<script src="../USON.js"></script>
 		<script>
-			// if not exists console.log.
-			if (global.console === undefined || console.log === undefined || console.log.apply === undefined) {
-				global.console = {
-					log : function(msg) {
-						alert(msg);
-					}
-				};
-			}
-			
-			// no require.
-			global.require = function() {
-				// ignore.
-			};
+		'use strict';
+		RUN(() => {
+			INIT_OBJECTS();
+		});
 		</script>
 		<script src="MULTILINE.js"></script>
 		<script src="OVERLOAD.js"></script>
 		<script src="ANNOTATION.js"></script>
+		<script src="ANNOTATION_AND_OVERLOAD.js"></script>
 		<script src="USON.js"></script>
 	</body>
 </html>

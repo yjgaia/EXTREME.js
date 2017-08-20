@@ -1,24 +1,21 @@
-global.MULTILINE = MULTILINE = METHOD({
+/*
+ * JavaScript에서 사용할 수 없는 멀티라인 문자열을 주석을 이용해서 지원하는 기능
+ */
+global.MULTILINE = METHOD({
 
-	run : function(func) {
-		'use strict';
+	run : (func) => {
 		//REQUIRED: func
 
-		var
-		// multiline string
-		multilineStr = /\/\*!?(?:\@preserve)?[ \t]*(?:\r\n|\n)([\s\S]*?)(?:\r\n|\n)\s*\*\//.exec(func.toString())[1],
-
-		// indent match
-		indentMatch = multilineStr.match(/^[ \t]*(?=[^\s])/gm),
-
-		// indent count
-		indentCount;
+		let multilineStr = /\/\*!?(?:\@preserve)?[ \t]*(?:\r\n|\n)([\s\S]*?)(?:\r\n|\n)\s*\*\//.exec(func.toString())[1];
+		let indentMatch = multilineStr.match(/^[ \t]*(?=[^\s])/gm);
 
 		if (indentMatch === TO_DELETE) {
 			return str;
 		} else {
+			
+			let indentCount;
 
-			EACH(indentMatch, function(indent) {
+			EACH(indentMatch, (indent) => {
 				if (indentCount === undefined || indentCount > indent.length) {
 					indentCount = indent.length;
 				}

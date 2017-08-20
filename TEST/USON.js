@@ -1,17 +1,9 @@
-require('./UPPERCASE.JS-COMMON.js');
-require('../USON.js');
+TEST('USON', (check) => {
 
-TEST('USON', function(ok) {
-	'use strict';
-
-	INIT_OBJECTS();
-	
-	var
-	// data
-	data = {
+	let data = {
 	    msg : 'test',
 	    date : new Date(),
-	    func : function() {
+	    func : () => {
 	        console.log('ok!');
 	    }
 	};
@@ -25,32 +17,24 @@ TEST('USON', function(ok) {
 	// ok!
 	USON.parse(USON.stringify(data)).func();
 	
-	RUN(function() {
+	RUN(() => {
 		
-		var
-		// Person
-		Person = function(firstName, lastName) {
+		let Person = function(firstName, lastName) {
 			this.firstName = firstName;
 			this.lastName = lastName;
-		},
-		
-		// origin data
-		originData,
-		
-		// data
-		data;
+		};
 		
 		Person.prototype.getName = function() {
 			return this.firstName + ' ' + this.lastName;
 		};
 
-		originData = {
+		let originData = {
 			Person : Person,
 			person : new Person('Young Jae', 'Sim'),
 			METHOD : METHOD
 		};
 		
-		data = USON.parse(USON.stringify(originData));
+		let data = USON.parse(USON.stringify(originData));
 		
 		console.log(new data.Person('Young Jae', 'Sim').getName());
 		console.log(data.person.getName());

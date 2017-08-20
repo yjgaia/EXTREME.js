@@ -1,31 +1,19 @@
-require('./UPPERCASE.JS-COMMON.js');
-require('../ANNOTATION.js');
-
-TEST('ANNOTATION', function(ok) {
-	'use strict';
-
-	INIT_OBJECTS();
+TEST('ANNOTATION', (check) => {
 	
-	var
-	// set color.
-	setColor = function(color) {
+	let setColor = (color) => {
 	    console.log('setColor: ' + color);
-	},
+	};
 	
-	// set color. (not empty)
-	setColorNotEmpty = function(color) {
+	let setColorNotEmpty = (color) => {
 	    //@notEmpty
-	
+		
 	    console.log('setColor(not empty): ' + color);
-	},
+	};
 	
-	// run.
-	run = function(func, color) {
+	let run = (func, color) => {
 	
-	    var
-	    // ann
-	    ann = ANNOTATION(func);
-	
+	    let ann = ANNOTATION(func);
+		
 	    if (color === undefined && ann.check('notEmpty')) {
 	        // ignore.
 	    } else {

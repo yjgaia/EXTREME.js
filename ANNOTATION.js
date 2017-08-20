@@ -1,66 +1,41 @@
+/*
+ * JavaScript에서 어노테이션 주석을 인식할 수 있게 하는 기능
+ */
 global.ANNOTATION = ANNOTATION = CLASS({
 
-	init : function(inner, self, func) {
-		'use strict';
+	init : (inner, self, func) => {
 		//REQUIRED: func
 
-		var
-		// func string
-		funcStr = func.toString(),
+		let funcStr = func.toString();
+		
+		let parameterAnnotationMap = {};
+		let parameterStr = /^[^(]*\(\s*([^)]*?)\s*\)/.exec(funcStr)[1];
+		let parameterInfos = parameterStr === '' ? undefined : parameterStr.split(/,\s*/);
+	
+		funcStr = funcStr.replace(/^[^(]*\(\s*([^)]*?)\s*\)/, '');
 
-		// annotations
-		annotations,
-
-		// parameter annotation map
-		parameterAnnotationMap = {},
-
-		// parameter string
-		parameterStr = /^[\s\(]*function[^(]*\(\s*([^)]*?)\s*\)/.exec(func.toString())[1],
-
-		// parameter infos
-		parameterInfos = parameterStr === '' ? undefined : parameterStr.split(/,\s*/),
-
-		// get annotation comments.
-		getAnnotationComments,
-
-		// get annotations.
-		getAnnotations,
-
-		// check.
-		check,
-
-		// get parameter annotations.
-		getParameterAnnotations,
-
-		// check parameter.
-		checkParameter;
-
-		funcStr = funcStr.replace(/^[\s\(]*function[^(]*\(\s*([^)]*?)\s*\)/, '');
-
-		getAnnotationComments = function(str) {
-
-			var
-			// comments
-			comments = str.replace(/'[^'\\]*(?:\\.[^'\\]*)*'|"[^"\\]*(?:\\.[^"\\]*)*"/gm, '').match(/(\/\/@(.*)$)/gm);
+		let getAnnotationComments = (str) => {
+			
+			let comments = str.replace(/'[^'\\]*(?:\\.[^'\\]*)*'|"[^"\\]*(?:\\.[^"\\]*)*"/gm, '').match(/(\/\/@(.*)$)/gm);
 
 			if (comments === TO_DELETE) {
 				comments = [];
 			}
 
-			EACH(comments, function(comment, i) {
+			EACH(comments, (comment, i) => {
 				comments[i] = comment.substring(3);
 			});
 
 			return comments;
 		};
 
-		annotations = getAnnotationComments(funcStr);
+		let annotations = getAnnotationComments(funcStr);
 
-		self.getAnnotations = getAnnotations = function() {
+		let getAnnotations = self.getAnnotations = () => {
 			return annotations;
 		};
 
-		self.check = check = function(annotation) {
+		let check = self.check = (annotation) => {
 			return FIND({
 				data : annotations,
 				value : annotation
@@ -68,20 +43,18 @@ global.ANNOTATION = ANNOTATION = CLASS({
 		};
 
 		if (parameterInfos !== undefined) {
-			EACH(parameterInfos, function(parameterInfo, i) {
+			EACH(parameterInfos, (parameterInfo, i) => {
 				parameterAnnotationMap[i] = getAnnotationComments(parameterInfo);
 			});
 		}
 
-		self.getParameterAnnotations = getParameterAnnotations = function(i) {
+		let getParameterAnnotations = self.getParameterAnnotations = (i) => {
 			return parameterAnnotationMap[i];
 		};
 
-		self.checkParameter = checkParameter = function(i, annotation) {
+		let checkParameter = self.checkParameter = (i, annotation) => {
 
-			var
-			// parameter annotations
-			parameterAnnotations = getParameterAnnotations(parameterName);
+			let parameterAnnotations = getParameterAnnotations(parameterName);
 
 			return parameterAnnotations !== undefined && FIND({
 				data : parameterAnnotations,

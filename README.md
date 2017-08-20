@@ -1,36 +1,30 @@
 # EXTREME.js
-JavaScript의 한계를 뛰어넘기 위해 만들어진 [UPPERCASE.JS](https://github.com/Hanul/UPPERCASE.JS)기반 프로젝트입니다.
+JavaScript의 한계를 넘을 수 있는 방법들을 시도하는 프로젝트입니다.
 
-## 사용방법
-1. UPPERCASE.JS-COMMON을 import 합니다.
-2. 필요한 기능이 들어있는 파일을 import 합니다.
+EXTREME.js는 [UPPERCASE-CORE](https://github.com/Hanul/UPPERCASE/blob/master/DOC/GUIDE/UPPERCASE-CORE.md)를 기반으로 만들어졌습니다.
 
-## 사용 환경
-* Node.js
-* 웹 브라우저 *Internet Explorer 9 이상부터 작동 가능합니다.*
-
+## 사용 방법
+### Node.js 환경
+```
+npm install -s extreme.js
+```
 ```javascript
-require('./UPPERCASE.JS-COMMON.js');
-require('./MULTILINE.js');
+require('extreme.js');
 ```
 
+### 웹 브라우저 환경
 ```html
-...
-<script>
-    global = window;
-</script>
-<script src="UPPERCASE.JS-COMMON.js"></script>
+<script src="UPPERCASE-CORE/BROWSER.js"></script>
 <script src="MULTILINE.js"></script>
-<script>
-...
+<script src="OVERLOAD.js"></script>
+<script src="ANNOTATION.js"></script>
+<script src="USON.js"></script>
 ```
 
-## MULTILINE
+## `MULTILINE`
 JavaScript에서 사용할 수 없는 멀티라인 문자열을 주석을 이용해서 지원하는 기능입니다.
 ```javascript
-var
-// multiline string
-multilineStr = MULTILINE(function() {/*
+let multilineStr = MULTILINE(() => {/*
 
      동해물과 백두산이 마르고 닳도록
      하느님이 보우하사 우리나라 만세
@@ -61,7 +55,7 @@ console.log(multilineStr);
 ### UglifyJS나 Yui Compressor 대응
 아래와 같이 주석의 앞 뒤에 내용을 추가하면 JavaScript를 압축 할 때 주석을 제거하지 않습니다.
 ```javascript
-MULTILINE(function() {/*!@preserve
+MULTILINE(() => {/*!@preserve
 	
 	동해물과 백두산이 마르고 닳도록
 	하느님이 보우하사 우리나라 만세
@@ -86,59 +80,51 @@ MULTILINE(function() {/*!@preserve
 */''});
 ```
 
-## OVERLOAD
+## `OVERLOAD`
 JavaScript에서 함수를 파라미터 개수에 따라 다르게 호출할 수 있는 기능입니다.
 ```javascript
-var
-// overload function
-overloadFunc = OVERLOAD([
+let overloadFunc = OVERLOAD([
 
-function() {
-    console.log('first function.');
+() => {
+	return 'first';
 },
 
-function(a) {
-    console.log('second function, a:' + a);
+(a) => {
+	return a;
 },
 
-function(a, b) {
-    console.log('third function, a:' + a + ', b:' + b);
+(a, b) => {
+	return a + b;
 },
 
-function(a, b, c) {
-    console.log('fourth function, a:' + a + ', b:' + b + ', c:' + c);
+(a, b, c) => {
+	return a + b + c;
 }]);
 
-overloadFunc();
-overloadFunc(1);
-overloadFunc(2, 3);
-overloadFunc(3, 4, 5);
+console.log(overloadFunc());
+console.log(overloadFunc(1));
+console.log(overloadFunc(2, 3));
+console.log(overloadFunc(3, 4, 5));
 ```
 
-## ANNOTATION
+## `ANNOTATION`
 JavaScript에서 어노테이션 주석을 인식할 수 있게 하는 기능입니다.
 
 ```javascript
-var
-// set color.
-setColor = function(color) {
+let setColor = (color) => {
     console.log('setColor: ' + color);
-},
+};
 
-// set color. (not empty)
-setColorNotEmpty = function(color) {
+let setColorNotEmpty = (color) => {
     //@notEmpty
-
+	
     console.log('setColor(not empty): ' + color);
-},
+};
 
-// run.
-run = function(func, color) {
+let run = (func, color) => {
 
-    var
-    // ann
-    ann = ANNOTATION(func);
-
+    let ann = ANNOTATION(func);
+	
     if (color === undefined && ann.check('notEmpty')) {
         // ignore.
     } else {
@@ -152,77 +138,61 @@ run(setColor, undefined);
 run(setColorNotEmpty, undefined);
 ```
 
-### ANNOTATION & OVERLOAD
+### `ANNOTATION` & `OVERLOAD`
 어노테이션 주석을 이용하여 OVERLOAD 기능을 확장할 수 있습니다.
 파라미터 type 검사는 JavaScript의 기본 type들과 array, Date 형을 지원합니다.
 
 ```javascript
-var
-// add.
-add = OVERLOAD([
+let add = OVERLOAD([
 
-function(
+(
 //@number
 a,
 
 //@number
-b) {
-
-    console.log('add numbers.');
-
-    return a + b;
+b) => {
+	return a + b;
 },
 
-function(
+(
 //@array
 a,
 
 //@array
-b) {
+b) => {
 
-    var
-    // ret
-    ret = [];
+	let ret = [];
+	
+	EACH(a, (v) => {
+		ret.push(v);
+	});
 
-    console.log('add arrays.');
+	EACH(b, (v) => {
+		ret.push(v);
+	});
 
-    EACH(a, function(v) {
-        ret.push(v);
-    });
-
-    EACH(b, function(v) {
-        ret.push(v);
-    });
-
-    return ret;
+	return ret;
 },
 
-function(
+(
 //@date
 a,
 
 //@date
-b) {
-
-    console.log('add dates.');
-
-    return new Date(a.getTime() + b.getTime());
+b) => {
+	return new Date(a.getTime() + b.getTime());
 },
 
-function(a, b) {
-
-    console.log('add unknowns.');
-
-    return a + b;
+(a, b) => {
+	return a + b;
 }]);
 
 console.log(add(1, 2));
 console.log(add([1, 2], [3, 4]));
 console.log(add('A', 'B'));
-};
 ```
 
-## USON
+## `USON`
 `JSON`을 확장한 것으로, 아래와 같이 다양한 종류의 타입을 처리할 수 있습니다.
 
 * boolean
@@ -234,14 +204,12 @@ console.log(add('A', 'B'));
 * ***prototype***
 
 ```javascript
-var
-// data
-data = {
-    msg : 'test',
-    date : new Date(),
-    func : function() {
-        console.log('ok!');
-    }
+let data = {
+	msg : 'test',
+	date : new Date(),
+	func : () => {
+		console.log('ok!');
+	}
 };
 
 // where are date and func?
@@ -254,5 +222,8 @@ console.log(USON.parse(USON.stringify(data)));
 USON.parse(USON.stringify(data)).func();
 ```
 
-## License
-[MIT](LISENCE)
+## 라이센스
+[MIT](LICENSE)
+
+## 작성자
+[Young Jae Sim](https://github.com/Hanul)
