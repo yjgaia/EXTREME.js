@@ -17,26 +17,22 @@ TEST('USON', (check) => {
 	// ok!
 	USON.parse(USON.stringify(data)).func();
 	
-	RUN(() => {
-		
-		let Person = function(firstName, lastName) {
-			this.firstName = firstName;
-			this.lastName = lastName;
-		};
-		
-		Person.prototype.getName = function() {
-			return this.firstName + ' ' + this.lastName;
-		};
+	let Person = function(firstName, lastName) {
+		this.firstName = firstName;
+		this.lastName = lastName;
+	};
+	
+	Person.prototype.getName = function() {
+		return this.firstName + ' ' + this.lastName;
+	};
 
-		let originData = {
-			Person : Person,
-			person : new Person('Young Jae', 'Sim'),
-			METHOD : METHOD
-		};
-		
-		let data = USON.parse(USON.stringify(originData));
-		
-		console.log(new data.Person('Young Jae', 'Sim').getName());
-		console.log(data.person.getName());
-	});
+	let originData = {
+		Person : Person,
+		person : new Person('Young Jae', 'Sim')
+	};
+	
+	let newData = USON.parse(USON.stringify(originData));
+	
+	console.log(new newData.Person('Young Jae', 'Sim').getName());
+	console.log(newData.person.getName());
 });
